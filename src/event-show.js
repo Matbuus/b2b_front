@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from "axios/index";
 import L from "leaflet";
+import Places from "places.js";
 
 
 
@@ -48,28 +49,13 @@ class EventShow extends Component {
                this.setState({evenement: response.data.evenement});
                this.setState({lat: response.data.evenement.lat});
                this.setState({lng: response.data.evenement.lng});
+               this.setState({date: response.data.evenement.date.date.toString() });
                 this.setState({address: response.data.evenement.address});
             }).catch(error => {
                 console.log(error);
             });
 
-        let map = document.querySelector('#map')
-        if(map === null){
-            return
-        }
-        let icon = L.icon({
-            iconUrl:'/images/marker-icon.png',
-        })
-        let center = [this.state.lat, this.state.lng];
-        console.log(center);
-        map = L.map('map').setView(center, 15 )
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 20,
-            minZoom: 10,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
 
-        L.marker(center, {icon: icon}).addTo(map)
 
     }
     constructor(props) {
@@ -80,7 +66,9 @@ class EventShow extends Component {
             evenement: 'a',
             lat: 0,
             lng: 0,
-            address: ''
+            address: '',
+            map: false,
+            date: '',
 
         }
         console.log("id client " + this.state.clientId);
@@ -96,9 +84,15 @@ class EventShow extends Component {
         console.log(this.state);
         const table = [];
         let evenement = this.state.evenement;
+        let mapDone = false;
+
+
 
         return (
             <div>
+                <div class="card">
+                <div class="card-header"> <h1> Evenement en détails </h1></div>
+                <div class="card-body">
                 <table class="table">
                     <tbody>
                     <tr>
@@ -119,15 +113,42 @@ class EventShow extends Component {
                     </tr>
                     <tr>
                         <th>Date</th>
-                        <td>{ evenement.id}</td>
+                        <td>{ this.state.date }</td>
                     </tr>
                     </tbody>
                 </table>
+                    <h3> Localiser l'evenement ! </h3>
                 <div id="map" style={mapStyle} data-lat={ evenement.lat } data-lng={ evenement.lng }> </div>
+                </div>
+                    <div class="card-footer">
+                        <p> Here </p>
+                    </div>
+                </div>
             </div>
-        )
+        );
     }
 
+    componentDidUpdate(){
+        if(this.state.lat !== 0 && this.state.lng !== 0 && document.querySelector('#map') !== null && this.state.map == false){
+            console.log("mapping");
+            let map = document.querySelector('#map');
+            console.log("before");
+            let icon = L.icon({
+                iconUrl:'/images/marker-icon.png',
+            });
+            let center = [this.state.lat, this.state.lng];
+            console.log(center);
+            map = L.map('map').setView(center, 15 );
+            this.setState({map: true});
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 20,
+                minZoom: 10,
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            L.marker(center, {icon: icon}).addTo(map);
+
+        }
+    }
 
 }
 
