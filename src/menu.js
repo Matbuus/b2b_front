@@ -23,11 +23,11 @@ class MenuBar extends Component {
 <li className="nav-item">
                     <NavLink to="/evenements" className="nav-link">Liste des evenements</NavLink>
                     </li>
-                    <li className="nav-item" className="nav-link">
-                    <NavLink to="/type-events">Types d'evenements</NavLink>
+                    <li className="nav-item" className="nav-item">
+                    <NavLink to="/type-events" className="nav-link">Types d'evenements</NavLink>
                     </li>
-                <li className="nav-item" className="nav-link">
-                    <NavLink to="/metiers">Liste des metiers</NavLink>
+                <li className="nav-item" className="nav-item">
+                    <NavLink to="/metiers" className="nav-link">Liste des metiers</NavLink>
                 </li>
 
             </ul>

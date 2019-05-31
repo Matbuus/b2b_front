@@ -16,6 +16,9 @@ import EventShow from './event-show';
 import EveT from "./event-type";
 import NewTypeEvent from "./new-type-event";
 import MetierList from "./metier-list";
+import MetierShow from "./metier-show";
+import PrestationTypeList from "./prestation-type-list";
+import NewPrestationType from "./new-prestation-type";
 
 
 class App extends Component{
@@ -37,6 +40,9 @@ render() {
                     <Route path="/type-events/new" component={NewTypeEvent}/>
                     <Route path="/type-events" component={EveT}/>
                     <Route path="/metiers" component={MetierList}/>
+                    <Route path="/metier/:metierId/add_tp" component={NewPrestationType}/>
+                    <Route path="/metier/:metierId" component={MetierShow}/>
+                    <Route path="/tp" component={PrestationTypeList}/>
                 </Switch>
             </div>
         </BrowserRouter>

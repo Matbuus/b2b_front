@@ -12,6 +12,7 @@ class EventList extends Component {
         }
         const rep = axios.get('http://localhost:8000/evenement')
             .then(response => {
+                console.log(response);
                 this.setState({ evenements : response.data.evenements });
             }).catch(error => {
                 console.log(error);
@@ -40,7 +41,6 @@ class EventList extends Component {
         //console.log(this.state.evenements);
         const table = [];
         const children = [];
-
         this.state.evenements.forEach((evenement) => console.log(evenement));
 
         this.state.evenements.forEach(

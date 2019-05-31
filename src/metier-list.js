@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from "axios/index";
 import {BrowserRouter, NavLink, Route, Switch} from 'react-router-dom';
 import NewTypeEvent from "./new-type-event";
+import NewMetier from "./new-metier";
 
 
 
@@ -74,6 +75,7 @@ class MetierList extends Component {
                 <td>
                     <button className="btn btn-danger" onClick={this.delete.bind(this,metier)} >Supprimer</button>
                     <button className="btn btn-warning" onClick={this.edit.bind(this,metier)} >Edit</button>
+                    <NavLink to={'/metier/'+metier.id} params={{ metierId: metier.id }} className="btn btn-info">Show</NavLink>
                 </td>
 
             </tr>
@@ -101,9 +103,9 @@ class MetierList extends Component {
         return (
             <div>
                 <p> { this.state.createNew } </p>
-                {this.state.createNew? <button onClick={this.createNewType} className="btn btn-danger"> Annuler Ajout</button> : <button onClick={this.createNewType} className="btn btn-success"> Nouveau Type </button> }
+                {this.state.createNew? <button onClick={this.createNewMetier} className="btn btn-danger"> Annuler Ajout</button> : <button onClick={this.createNewMetier} className="btn btn-success"> Nouveau Type </button> }
 
-                { this.state.createNew? <NewTypeEvent /> : <br />}
+                { this.state.createNew? <NewMetier /> : <br />}
                 {table}
             </div>
         )

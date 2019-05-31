@@ -4,12 +4,12 @@ import Places from "places.js";
 
 
 const $ = require('jquery');
-let inputAddress = document.querySelector('#evenement_address');
-class NewTypeEvent extends Component {
+
+class NewMetier extends Component {
 
     constructor(props){
         super(props);
-        this.state = {nom: ''};
+        this.state = {titre: ''};
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
@@ -19,12 +19,13 @@ class NewTypeEvent extends Component {
 
     handleSubmit = event => {
 
-        if(this.state.nom != "") {
+        if(this.state.titre != "") {
+
             axios({
                 method: 'post',
-                url: 'http://localhost:8000/admin/type_event/newType',
+                url: 'http://localhost:8000/admin/metier/newMetier',
                 data: {
-                    nom: this.state.nom,
+                    titre: this.state.titre,
                 },
                 headers:{
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -44,7 +45,7 @@ class NewTypeEvent extends Component {
 
 
     handleChange = event => {
-        this.setState({nom: event.target.value})
+        this.setState({titre: event.target.value})
     };
 
     render(){
@@ -52,8 +53,8 @@ class NewTypeEvent extends Component {
         return (<div>
                 <form>
                     <div>
-                        <label for="type_evenement_nom" class="required">Nom</label>
-                        <input type="text" id="type_evenement_nom" name="type_evenement[nom]" required="required" maxLength="255" value={this.state.value} onChange={this.handleChange}/>
+                        <label for="metier_titre" class="required">Titre</label>
+                        <input type="text" id="metier_titre" name="metier[nom]" required="required" maxLength="255" value={this.state.titre} onChange={this.handleChange}/>
                     </div>
 
                     <button onClick={this.handleSubmit} className="btn btn-success"> Enregistrer </button>
@@ -67,4 +68,4 @@ class NewTypeEvent extends Component {
 
 }
 
-export default NewTypeEvent;
+export default NewMetier;
