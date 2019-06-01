@@ -11,12 +11,31 @@ let inputAddress = document.querySelector('#evenement_address');
 
 class LoginPage extends Component {
 
-    handleSubmit = event => {
+
+    handleChange = event => {
+        this.setState({[event.target.name]: event.target.value});
+      //  console.log(this.state);
+    };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+
+            email: '',
+            password: '',
+            redirect: '',
+        }
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+
+    }
+
+    handleSubmit = () => {
 
 
 
         console.log(this.state);
-
         axios({
             method: 'post',
             url: 'http://localhost:8000/login',
@@ -31,10 +50,7 @@ class LoginPage extends Component {
             .then(function (response) {
                 Cookies.set('auth_token', response.data.role);
                 Cookies.set('userId', response.data.userId);
-                this.setState({redirect: true});
-                console.log(this.state.redirect);
                 console.log(response);
-
 
             })
             .catch(function (error) {
@@ -47,40 +63,9 @@ class LoginPage extends Component {
 
     };
 
-
-
-
-
-    renderRedirect = () => {
-        if (this.state.redirect) {
-            return <Redirect to='/clients' />
-        }
-    };
-
-    handleChange = event => {
-        this.setState({[event.target.name]: event.target.value});
-      //  console.log(this.state);
-    };
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: '',
-            password: '',
-            redirect: false,
-        }
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-
-
-    }
-
     render() {
 
 
-        if(this.state.redirect) {
-            return this.renderRedirect;
-        }
         return (
 
 
@@ -112,28 +97,9 @@ class LoginPage extends Component {
         );
     }
 
-    componentDidMount(prevProps) {
-        inputAddress = document.querySelector('#client_address');
-        if (inputAddress == null)
-            return;
-        console.log(inputAddress);
-        let place;
-        place = Places({
-            container: inputAddress
-        });
-
-        place.on('change', e => {
-            this.setState({address: e.suggestion.name});
-            document.querySelector('#client_city').value = e.suggestion.city;
-            this.setState({city: e.suggestion.city});
-            document.querySelector('#client_postal').value = e.suggestion.postcode;
-            this.setState({postal: e.suggestion.postcode});
-            document.querySelector('#client_lat').value = e.suggestion.latlng.lat;
-            this.setState({lat: e.suggestion.latlng.lat});
-            document.querySelector('#client_lng').value = e.suggestion.latlng.lng;
-            this.setState({lng: e.suggestion.latlng.lng});
-        });
-
+    componentDidUpdate(prevProps) {
+        if(Cookies.get('userId') !== undefined)
+            console.log('logged');
     }
 
 }

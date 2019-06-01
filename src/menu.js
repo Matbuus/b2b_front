@@ -7,7 +7,8 @@ import LoginPage from "./login";
 class MenuBar extends Component {
     constructor(props) {
         super(props);
-        console.log(Cookies.get('userId'));
+        this.userId = Cookies.get('userId');
+        this.role = Cookies.get('auth_token');
     }
 
     render(){
@@ -16,10 +17,8 @@ class MenuBar extends Component {
         let menuClient = [];
         let menuPartenaire = [];
 
-        if(Cookies.get('userId') == undefined) {
-            return <LoginPage/>;
-        }
         menuAdmin.push(
+            <div>
             <ul className="nav nav-tabs">
                 <li className="nav-item">
                     <NavLink to="/clients" className="nav-link">Liste des clients</NavLink>
@@ -27,17 +26,19 @@ class MenuBar extends Component {
                 <li className="nav-item">
                     <NavLink to="/evenements" className="nav-link">Liste des evenements</NavLink>
                 </li>
-                <li className="nav-item" className="nav-item">
+                <li className="nav-item">
                     <NavLink to="/type-events" className="nav-link">Types d'evenements</NavLink>
                 </li>
-                <li className="nav-item" className="nav-item">
+                <li className="nav-item">
                     <NavLink to="/metiers" className="nav-link">Liste des metiers</NavLink>
                 </li>
-
-                <li className="nav-item d-flex justify-content-end">
-                    <NavLink to={'/logout'} className="nav-link">Déconnexion</NavLink>
+                <li className="nav-item justify-content-end">
+                    <NavLink to={'/logout'} className="nav-link justify-content-end">Déconnexion</NavLink>
                 </li>
+
             </ul>
+
+            </div>
         );
 
 

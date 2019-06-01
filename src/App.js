@@ -23,6 +23,7 @@ import Cookies from 'js-cookie';
 import ClientShow from "./client-show";
 import ClientRegister from "./client-register";
 import LoginPage from "./login";
+import Logout from "./logout";
 
 
 class App extends Component{
@@ -31,6 +32,12 @@ class App extends Component{
     }
 
 render() {
+
+    if(Cookies.get('userId') == undefined) {
+        return <LoginPage/>;
+    } else
+
+
   return (<BrowserRouter>
             <div>
                 <MenuBar role={Cookies.get('auth_token')} userId={Cookies.get('userId')}/>
@@ -49,6 +56,7 @@ render() {
                     <Route path="/profile/:clientId" component={ClientShow}/>
                     <Route path="/new/client" component={ClientRegister} />
                     <Route path="/login" component={LoginPage} />
+                    <Route path="/logout" component={Logout} />
                 </Switch>
             </div>
         </BrowserRouter>
