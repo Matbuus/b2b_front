@@ -45,6 +45,29 @@ class EventListClient extends Component {
     }
 
 
+    delete = (evenement) => {
+        // var clients = this.state.clients;
+        // var index = clients.indexOf(client);
+        // if (index !== -1) {
+        //     clients.splice(index, 1);
+        //     this.setState({clients});
+        // }
+        axios.delete('http://localhost:8000/client/'+evenement.id)
+            .then(res => {
+                this.setState(previousState => {
+                    return {
+                        evenements: previousState.evenements.filter(m => m.id !== evenement.id)
+                    };
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        //console.log(index);
+    };
+
+
+
     render(){
 
         //console.log(this.state.evenements);
@@ -77,12 +100,16 @@ class EventListClient extends Component {
             (evenement) => (children.push(<tr>
                 <td> {evenement.id }</td>
                 <td> { evenement.titre }</td>
-                <td>{ evenement.date.date.toString() }</td>
+                <td>{ evenement.date.date.toString().slice(0,16)}</td>
                 <td> {evenement.type.nom }</td>
                 <td>
                     <NavLink to={'/client/'+ evenement.client.id + '/event/' + evenement.id}
                              params={this.showEventParams(evenement)}
                              className="btn btn-info">Show</NavLink>
+                    <button className='btn btn-danger' onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) this.delete(evenement) } } >
+                        Supprimer
+                    </button>
+
                 </td>
             </tr>)));
 

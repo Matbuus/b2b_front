@@ -13,9 +13,11 @@
     "let": "^0.0.2",
     "places.js": "^1.16.4",
     "react": "^16.8.6",
+    "react-alert": "^5.5.0",
     "react-datepicker": "^2.6.0",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "react-transition-group": "^4.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

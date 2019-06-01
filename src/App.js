@@ -21,20 +21,19 @@ import PrestationTypeList from "./prestation-type-list";
 import NewPrestationType from "./new-prestation-type";
 import Cookies from 'js-cookie';
 import ClientShow from "./client-show";
+import ClientRegister from "./client-register";
+import LoginPage from "./login";
 
 
 class App extends Component{
     constructor(props){
         super(props);
-        Cookies.set('auth_token', 'client');
-        Cookies.set('userId','2');
-
     }
 
 render() {
   return (<BrowserRouter>
             <div>
-                <MenuBar role={Cookies.get('auth_token')} userId="2"/>
+                <MenuBar role={Cookies.get('auth_token')} userId={Cookies.get('userId')}/>
                 <Switch>
                     <Route path="/client/:clientId/event/:eventId" component={EventShow}/>
                     <Route path="/client/:clientId/events" component={EventListClient}/>
@@ -48,6 +47,8 @@ render() {
                     <Route path="/metier/:metierId" component={MetierShow}/>
                     <Route path="/tp" component={PrestationTypeList}/>
                     <Route path="/profile/:clientId" component={ClientShow}/>
+                    <Route path="/new/client" component={ClientRegister} />
+                    <Route path="/login" component={LoginPage} />
                 </Switch>
             </div>
         </BrowserRouter>

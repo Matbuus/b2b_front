@@ -3,6 +3,7 @@ import axios from "axios/index";
 import Places from "places.js";
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import { useAlert } from "react-alert";
 
 
 const $ = require('jquery');
@@ -23,7 +24,7 @@ class EventCreate extends Component {
             eventTypes: [],
             startDate : new Date(),
             titre: '',
-            nomType: 'Maintenance Chaudière',
+            nomType: 'Maintenance chaudière',
             address: '' ,
             city: '',
             postal: '',
@@ -39,8 +40,14 @@ class EventCreate extends Component {
 
     handleSubmit = event => {
 
+
+        console.log(alert("Evenement créé"));
+
         if(this.state.titre.length < 3 || this.state.address == '' ||  this.state.city == '' ||  this.state.postal == '' || this.state.lat == '' || this.state.lng == '')
             return;
+
+
+
 
         axios({
             method: 'post',
@@ -55,8 +62,10 @@ class EventCreate extends Component {
                 lat: this.state.lat,
                 lng: this.state.lng,
                 date: this.state.startDate.getDate(),
-                month: this.state.startDate.getMonth(),
+                month: this.state.startDate.getMonth()+1,
                 year: this.state.startDate.getFullYear(),
+                hours: this.state.startDate.getHours(),
+                minutes: this.state.startDate.getMinutes(),
             },
             headers:{
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -79,7 +88,7 @@ class EventCreate extends Component {
 
             startDate: date
         });
-        console.log(this.state.startDate.getDate());
+        console.log(this.state.startDate.getMonth());
     }
 
 

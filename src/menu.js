@@ -1,21 +1,24 @@
 import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 import {BrowserRouter, NavLink, Route, Switch} from 'react-router-dom';
-
+import Cookies from 'js-cookie';
+import LoginPage from "./login";
 
 class MenuBar extends Component {
     constructor(props) {
         super(props);
-        this.role = props.role;
-        this.userId = props.userId;
-        console.log(this.userId);
+        console.log(Cookies.get('userId'));
     }
 
     render(){
 
         let menuAdmin =  [];
         let menuClient = [];
+        let menuPartenaire = [];
 
+        if(Cookies.get('userId') == undefined) {
+            return <LoginPage/>;
+        }
         menuAdmin.push(
             <ul className="nav nav-tabs">
                 <li className="nav-item">
@@ -31,6 +34,9 @@ class MenuBar extends Component {
                     <NavLink to="/metiers" className="nav-link">Liste des metiers</NavLink>
                 </li>
 
+                <li className="nav-item d-flex justify-content-end">
+                    <NavLink to={'/logout'} className="nav-link">Déconnexion</NavLink>
+                </li>
             </ul>
         );
 
@@ -43,6 +49,28 @@ class MenuBar extends Component {
                 <li className="nav-item">
                     <NavLink to={'/client/'+this.userId+'/events'} params={{ clientId: this.userId }} className="nav-link">Mes evenements</NavLink>
                 </li>
+
+                <li className="nav-item d-flex justify-content-end">
+                    <NavLink to={'/logout'} className="nav-link">Déconnexion</NavLink>
+                </li>
+            </ul>
+        );
+
+        menuPartenaire.push(
+            <ul className="nav nav-tabs">
+                <li className="nav-item">
+                    <NavLink to={'/profile/'+this.userId} params={{ clientId: this.userId }}  className="nav-link">Mon Profil</NavLink>
+                </li>
+                <li className="nav-item">
+                    <NavLink to={'/client/'+this.userId+'/events'} params={{ clientId: this.userId }} className="nav-link">Mes evenements</NavLink>
+                </li>
+                <li className="nav-item" className="nav-item">
+                    <NavLink to={"/types-prestation/"+this.userId} className="nav-link">Liste des metiers</NavLink>
+                </li>
+
+                <li className="nav-item d-flex justify-content-end">
+                    <NavLink to={'/logout'} className="nav-link">Déconnexion</NavLink>
+                </li>
             </ul>
         );
         return ( <div>
@@ -52,7 +80,7 @@ class MenuBar extends Component {
                         <p class="lead">Application B2B dans le cadre du projet Cassiopée.</p>
                     </div>
                 </div>
-                {this.role === "admin"? menuAdmin : menuClient}
+                {this.role === "admin"? menuAdmin : menuPartenaire}
             </div>
         );
     }

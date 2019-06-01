@@ -85,7 +85,8 @@ class EventShow extends Component {
         const table = [];
         let evenement = this.state.evenement;
         let mapDone = false;
-
+        if(evenement.date == undefined)
+            return null;
 
 
         return (
@@ -113,7 +114,7 @@ class EventShow extends Component {
                     </tr>
                     <tr>
                         <th>Date</th>
-                        <td>{ this.state.date }</td>
+                        <td>{ evenement.date.date.toString().slice(0,16) }</td>
                     </tr>
                     </tbody>
                 </table>

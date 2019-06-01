@@ -51,7 +51,7 @@ class EventList extends Component {
                 <td> {evenement.type.nom }</td>
                 <td>  <NavLink to={'/client/'+ evenement.client.id + '/event/' + evenement.id}
                                params={this.showEventParams(evenement)}
-                               className="btn btn-info">Evenements</NavLink></td>
+                               className="btn btn-info">Show</NavLink></td>
             </tr>)));
 
         table.push(
