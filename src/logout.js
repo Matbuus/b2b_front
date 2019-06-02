@@ -14,8 +14,7 @@ class Logout extends Component {
 
     constructor(props) {
         super(props);
-        Cookies.set('userId', undefined);
-        Cookies.set('auth_token', undefined);
+
     }
 
     render() {

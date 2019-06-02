@@ -17,7 +17,7 @@ const mapStyle = {
 class ClientShow extends Component {
 
     componentDidMount() {
-        if(this.state.clientId == Cookies.get('userId'))
+        if(this.state.clientId == Cookies.get('userId') && Cookies.get('userId') != 0)
             axios.get('http://localhost:8000/cclient/'
             + this.state.clientId)
             .then(response => {

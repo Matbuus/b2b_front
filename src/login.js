@@ -12,11 +12,6 @@ let inputAddress = document.querySelector('#evenement_address');
 class LoginPage extends Component {
 
 
-    handleChange = event => {
-        this.setState({[event.target.name]: event.target.value});
-      //  console.log(this.state);
-    };
-
     constructor(props) {
         super(props);
         this.state = {
@@ -30,6 +25,13 @@ class LoginPage extends Component {
 
 
     }
+
+
+
+    handleChange = event => {
+        this.setState({[event.target.name]: event.target.value});
+        //  console.log(this.state);
+    };
 
     handleSubmit = () => {
 
@@ -51,6 +53,7 @@ class LoginPage extends Component {
                 Cookies.set('auth_token', response.data.role);
                 Cookies.set('userId', response.data.userId);
                 console.log(response);
+                window.location.reload();
 
             })
             .catch(function (error) {
@@ -65,7 +68,8 @@ class LoginPage extends Component {
 
     render() {
 
-
+        if(Cookies.get('auth_token') !== undefined && Cookies.get('auth_token') !== "undefined")
+            return <p> Vous êtes connecté ! </p>
         return (
 
 

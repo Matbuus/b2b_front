@@ -11,15 +11,17 @@ class EventListClient extends Component {
     constructor(props) {
         super(props);
         console.log(props.match.params.clientId);
+        console.log(props);
         this.state = {
             evenements: [],
             clientId : props.match.params.clientId || -1,
             createNewEventBool: false,
         }
-        if(this.state.clientId == Cookies.get('userId'))
+        if(this.state.clientId == Cookies.get('userId') || Cookies.get('userId') == 0)
             axios.get('http://localhost:8000/client/'+this.state.clientId+'/event')
                 .then(response => {
                     this.setState({ evenements : response.data.evenements });
+                    console.log(response);
                 }).catch(error => {
                 console.log(error);
             });
@@ -75,7 +77,7 @@ class EventListClient extends Component {
         const children = [];
 
 
-        if(this.state.clientId !== Cookies.get('userId'))
+        if(this.state.clientId !== Cookies.get('userId') && Cookies.get('userId') != 0)
             return <h1> Vous n'avez pas l'accès </h1>;
 
         const boutonCreate = [];
