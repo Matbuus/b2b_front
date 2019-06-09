@@ -70,14 +70,18 @@ class EventShow extends Component {
             map: false,
             date: '',
 
-        }
+        };
         console.log("id client " + this.state.clientId);
         console.log("id event " + this.state.eventId);
-
+        this.goBack = this.goBack.bind(this);
         //this.clients.forEach((client) => (console.log(client)));
 
     }
 
+    goBack = () => {
+        console.log("BACK");
+        this.props.history.goBack();
+    }
     render(){
 
 
@@ -122,7 +126,7 @@ class EventShow extends Component {
                 <div id="map" style={mapStyle} data-lat={ evenement.lat } data-lng={ evenement.lng }> </div>
                 </div>
                     <div class="card-footer">
-                        <p> Here </p>
+                        <button class="btn"onClick={this.goBack}> Retour </button>
                     </div>
                 </div>
             </div>

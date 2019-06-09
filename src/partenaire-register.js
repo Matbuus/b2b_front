@@ -70,7 +70,7 @@ class PartenaireRegister extends Component {
             postal: '',
             lat: '',
             lng: '',
-            metier: '',
+            metier: 'Barman',
         }
 
         axios.get('http://localhost:8000/admin/metier').then(response => {

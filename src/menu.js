@@ -59,7 +59,7 @@ class MenuBar extends Component {
                 <ul class="navbar-nav">
                     <li className="nav-item d-flex justify-content-end">
                         {console.log(this.connected)}
-                        {this.connected ? <button className="justify-content-end" onClick={this.logout}>Déconnexion</button> : <button className="justify-content-end" onClick={this.logout}>Connexion</button>}
+                        {this.connected ? <button className="justify-content-end btn-danger" onClick={this.logout}>Déconnexion</button> : <button className="justify-content-end" onClick={this.logout}>Connexion</button>}
                     </li>
                 </ul>
 
@@ -80,7 +80,7 @@ class MenuBar extends Component {
                 </ul>
                 <ul class="navbar-nav">
                     <li className="nav-item d-flex justify-content-end">
-                        {this.connected ? <button className="justify-content-end" onClick={this.logout}>Déconnexion</button> : <button className="justify-content-end" onClick={this.logout}>Connexion</button>}
+                        {this.connected ? <button className="justify-content-end btn-danger" onClick={this.logout}>Déconnexion</button> : <button className="justify-content-end" onClick={this.logout}>Connexion</button>}
                     </li>
                 </ul>
             </nav>
@@ -96,18 +96,25 @@ class MenuBar extends Component {
                         <NavLink to={'/client/'+this.state.userId+'/events'} params={{ clientId: this.state.userId }} className="nav-link">Mes evenements</NavLink>
                     </li>
                     <li className="nav-item" className="nav-item">
-                        <NavLink to={"/types-prestation/"+this.state.userId} className="nav-link">Liste des metiers</NavLink>
+                        <NavLink to={"/" + this.state.userId+"/types-prestation"} params={{ partenaireId: this.state.userId }} className="nav-link">Mes types de prestations</NavLink>
+                    </li>
+                    <li className="nav-item" className="nav-item">
+                        <NavLink to={"/" + this.state.userId+"/events"} params={{ partenaireId: this.state.userId }} className="nav-link">Evenements</NavLink>
+                    </li>
+                    <li className="nav-item" className="nav-item">
+                        <NavLink to={"/partenaire/" + this.state.userId+"/prestations"} params={{ partenaireId: this.state.userId }} className="nav-link">Prestations proposées</NavLink>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li className="nav-item d-flex justify-content-end">
-                        {this.connected ? <button className="justify-content-end" onClick={this.logout}>Déconnexion</button> : <button className="justify-content-end" onClick={this.logout}>Connexion</button>}
+                        {this.connected ? <button className="justify-content-end btn-danger" onClick={this.logout}>Déconnexion</button> : <button className="justify-content-end" onClick={this.logout}>Connexion</button>}
                     </li>
                 </ul>
             </nav>
         );
 
         authMenu.push(
+            <div>
             <ul className="nav nav-tabs justify-content-center">
                 <li className="nav-item">
                     <NavLink to={'/login'} className="nav-link">Se connecter</NavLink>
@@ -119,6 +126,7 @@ class MenuBar extends Component {
                     <NavLink to={'/new/client'} className="nav-link">S'inscrire en tant que client</NavLink>
                 </li>
             </ul>
+            </div>
 
         )
 
