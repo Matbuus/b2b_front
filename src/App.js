@@ -29,6 +29,7 @@ import PrestationTypeListPartenaire from "./prestation-type-list-partenaire";
 import EventListPartenaire from "./event-list-client-partenaire";
 import ProposerPrestation from "./proposer-prestation";
 import PrestationsPartenaire from "./prestations-partenaire";
+import PrestationShow from "./prestation-show";
 
 
 class App extends Component{
@@ -52,6 +53,7 @@ class App extends Component{
                             </Switch>
                             :
                             <Switch>
+                                <Route path="/client/:clientId/event/:eventId/prestation/:prestationId" component={PrestationShow} />
                                 <Route path="/client/:clientId/event/:eventId" component={EventShow}/>
                                 <Route path="/client/:clientId/events" component={EventListClient}/>
                                 <Route path="/evenements" component={EventList}/>

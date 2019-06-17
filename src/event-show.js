@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import axios from "axios/index";
 import L from "leaflet";
 import Places from "places.js";
-
+import Cookies from "js-cookie";
+import {NavLink} from 'react-router-dom';
 
 
 
@@ -18,34 +19,11 @@ const mapStyle = {
 class EventShow extends Component {
 
     componentDidMount(prevProps) {
-        fetch('http://localhost:8000/client/'
-            + this.state.clientId +
-            /event/
-            + this.state.eventId)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        isLoaded: true,
-                        items: result.items
-                    });
-                },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            )
             axios.get('http://localhost:8000/client/'
             + this.state.clientId +
             /event/
             + this.state.eventId)
             .then(response => {
-                console.log(response);
                this.setState({evenement: response.data.evenement});
                this.setState({lat: response.data.evenement.lat});
                this.setState({lng: response.data.evenement.lng});
@@ -54,6 +32,21 @@ class EventShow extends Component {
             }).catch(error => {
                 console.log(error);
             });
+        if(this.state.clientId == Cookies.get('userId') && Cookies.get('userId') != 0){
+            axios.get('http://localhost:8000/client/'
+                + this.state.clientId +
+                /event/
+                + this.state.eventId
+            +   '/liste')
+                .then(response => {
+                    this.setState({listePrestations: response.data.listeProposer});
+                    this.setState({listeAccepter: response.data.listeAccepter});
+                    this.setState({listeRefuser: response.data.listeRefuser});
+                    this.setState({listeTermine: response.data.listeTermine});
+                }).catch(error => {
+                console.log(error);
+            });
+        }
 
 
 
@@ -61,6 +54,10 @@ class EventShow extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            listePrestations: [],
+            listeRefuser: [],
+            listeAccepter: [],
+            listeTermine: [],
             clientId : props.match.params.clientId,
             eventId : props.match.params.eventId,
             evenement: 'a',
@@ -69,34 +66,186 @@ class EventShow extends Component {
             address: '',
             map: false,
             date: '',
+            rating: 0,
 
         };
-        console.log("id client " + this.state.clientId);
-        console.log("id event " + this.state.eventId);
         this.goBack = this.goBack.bind(this);
+        this.changer = this.changer.bind(this);
+        this.terminer = this.terminer.bind(this);
         //this.clients.forEach((client) => (console.log(client)));
+        this.changeRating = this.changeRating.bind(this);
 
     }
 
+
+    changeRating(rating ) {
+        console.log(rating)
+    }
+
+    terminer = () => {
+
+        axios.get('http://localhost:8000/client/'
+            + this.state.clientId +
+            /event/
+            + this.state.eventId
+            +'/terminer')
+            .then(response => {
+                console.log(response);
+            }).catch(error => {
+            console.log(error);
+        });
+        window.location.reload();
+
+    }
+
+    changer = (prestation, action) => {
+        axios.get('http://localhost:8000/client/'
+            + this.state.clientId +
+            /event/
+            + this.state.eventId
+        +'/liste/'+ prestation.id + '/' + action)
+            .then(response => {
+                console.log(response);
+            }).catch(error => {
+            console.log(error);
+        });
+        window.location.reload();
+    };
     goBack = () => {
         console.log("BACK");
         this.props.history.goBack();
-    }
+    };
+
+    getParams = (prestation) => {
+       let params =  {
+           prestationId: prestation.id,
+           clientId: this.state.clientId,
+           eventId: this.state.eventId,
+       }
+       console.log(params);
+       return params;
+
+    };
     render(){
 
 
-        console.log(this.state);
-        const table = [];
         let evenement = this.state.evenement;
         let mapDone = false;
         if(evenement.date == undefined)
             return null;
 
+        const table = [];
+        const children = [];
+        this.state.listeTermine.forEach(
+            (prestation) => (children.push(
+                    <tr style={{color : 'green'}}>
+                        <td> {prestation.evenement.titre } </td>
+                        <td> { prestation.dateDebut.date.toString().slice(0,16) }</td>
+                        <td> {prestation.dateFin.date.toString().slice(0,16)} </td>
+                        <td> { prestation.typePrestation.nomType }</td>
+                        <td> {prestation.etatPrestation.titre }</td>
+                        <td>
+                            <NavLink to={'/client/'+ this.state.clientId + '/event/'+ this.state.eventId  + '/prestation/'+ prestation.id}
+                                     params={this.getParams(prestation)}
+                                     className="btn btn-info">Show</NavLink>
+                        </td>
+                    </tr>
+                )
+            ));
+
+        this.state.listeAccepter.forEach(
+            (prestation) => (children.push(
+                    <tr style={{color : 'blue'}}>
+                        <td> {prestation.evenement.titre } </td>
+                        <td> { prestation.dateDebut.date.toString().slice(0,16) }</td>
+                        <td> {prestation.dateFin.date.toString().slice(0,16)} </td>
+                        <td> { prestation.typePrestation.nomType }</td>
+                        <td> {prestation.etatPrestation.titre }</td>
+                        <td>
+                            <button type="button" class="btn btn-success" onClick={() => { if (window.confirm('Êtes vous sûr de vouloir accepter?')) this.changer(prestation,'confirmer') } } >
+                                Accepter
+                            </button>
+                            <NavLink to={'/client/'+ this.state.clientId + '/event/'+ this.state.eventId  + '/prestation/'+ prestation.id}
+                                     params={this.getParams(prestation)}
+                                     className="btn btn-info">Show</NavLink>
+                        </td>
+                    </tr>
+                )
+            ));
+
+        this.state.listePrestations.forEach(
+            (prestation) => (children.push(
+                    <tr>
+                        <td> {prestation.evenement.titre } </td>
+                        <td> { prestation.dateDebut.date.toString().slice(0,16) }</td>
+                        <td> {prestation.dateFin.date.toString().slice(0,16)} </td>
+                        <td> { prestation.typePrestation.nomType }</td>
+                        <td> {prestation.etatPrestation.titre }</td>
+                        <td>
+                            <button type="button" class="btn btn-danger" onClick={() => { if (window.confirm('Êtes vous sûr de vouloir refuser?')) this.changer(prestation,'refuser') } } >
+                                Refuser
+                            </button>
+                            <button type="button" class="btn btn-success" onClick={() => { if (window.confirm('Êtes vous sûr de vouloir accepter?')) this.changer(prestation,'confirmer') } } >
+                                Accepter
+                            </button>
+                            <NavLink to={'/client/'+ this.state.clientId + '/event/'+ this.state.eventId  + '/prestation/'+ prestation.id}
+                                     params={this.getParams(prestation)}
+                                     className="btn btn-info">Show</NavLink>
+                        </td>
+                    </tr>
+                )
+            ));
+
+        this.state.listeRefuser.forEach(
+            (prestation) => (children.push(
+                    <tr style={{color : 'red'}}>
+                        <td> {prestation.evenement.titre } </td>
+                        <td> { prestation.dateDebut.date.toString().slice(0,16) }</td>
+                        <td> {prestation.dateFin.date.toString().slice(0,16)} </td>
+                        <td> { prestation.typePrestation.nomType }</td>
+                        <td> {prestation.etatPrestation.titre }</td>
+                        <td>
+                            <button type="button" class="btn btn-success" onClick={() => { if (window.confirm('Êtes vous sûr de vouloir accepter?')) this.changer(prestation,'confirmer') } } >
+                                Accepter
+                            </button>
+                        </td>
+                    </tr>
+                )
+            ));
+
+        if(this.state.clientId == Cookies.get('userId') && Cookies.get('userId') != 0) {
+            table.push(<div>
+                    <h2> Liste des prestations pour cet evenement </h2>
+                    <br/> <br/>
+                    <table className="table">
+                        <thead>
+                        <tr>
+                            <th>Evenement</th>
+                            <th>Date de début</th>
+                            <th>Date de fin</th>
+                            <th>Type de prestation</th>
+                            <th>Etat de la prestation</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {children}
+                        </tbody>
+                    </table>
+                { (this.state.listeAccepter.length == 0 && this.state.listeTermine.length > 0 && evenement.etatEvenement.titre !== 'Termine')? <button class="btn btn-info" onClick={this.terminer}> Marquer evenement comme terminé </button>: <p> </p> }
+                </div>
+            );
+        }
 
         return (
             <div>
                 <div class="card">
-                <div class="card-header"> <h1> Evenement en détails </h1></div>
+                <div class="card-header">
+                    <h1> Evenement en détails </h1>
+                    <h2 class="text-info"> Etat de l'evenement : {evenement.etatEvenement.titre } </h2>
+
+                </div>
                 <div class="card-body">
                 <table class="table">
                     <tbody>
@@ -123,7 +272,10 @@ class EventShow extends Component {
                     </tbody>
                 </table>
                     <h3> Localiser l'evenement ! </h3>
+
                 <div id="map" style={mapStyle} data-lat={ evenement.lat } data-lng={ evenement.lng }> </div>
+                    <br/> <br/>
+                    {table}
                 </div>
                     <div class="card-footer">
                         <button class="btn"onClick={this.goBack}> Retour </button>
@@ -135,14 +287,11 @@ class EventShow extends Component {
 
     componentDidUpdate(){
         if(this.state.lat !== 0 && this.state.lng !== 0 && document.querySelector('#map') !== null && this.state.map == false){
-            console.log("mapping");
             let map = document.querySelector('#map');
-            console.log("before");
             let icon = L.icon({
                 iconUrl:'/images/marker-icon.png',
             });
             let center = [this.state.lat, this.state.lng];
-            console.log(center);
             map = L.map('map').setView(center, 15 );
             this.setState({map: true});
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

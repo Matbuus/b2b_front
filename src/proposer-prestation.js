@@ -109,7 +109,7 @@ class ProposerPrestation extends Component {
         const options = [];
         if(this.state.typesPrestation !== undefined){
             if(this.state.typeId == '' && this.state.typesPrestation[0] !== undefined)
-                this.setState({typeId: this.state.typesPrestation[0].id})
+                this.setState({typeId: this.state.typesPrestation[0].id});
             this.state.typesPrestation.forEach((type) => {
                 options.push(<option value={type.id} key={type.id}> {type.nomType}</option>);
 
@@ -156,7 +156,7 @@ class ProposerPrestation extends Component {
 
                 <div>
                     <label>Type de prestation</label>
-                    <select name="nomType" value={this.state.typeId} onChange={this.handleChange}>
+                    <select name="typeId" value={this.state.typeId} onChange={this.handleChange}>
                         {options}
                     </select>
                 </div>

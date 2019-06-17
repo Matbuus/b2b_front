@@ -20,6 +20,7 @@ class EventListPartenaire extends Component {
         //if(this.state.parenaireId == Cookies.get('userId') || Cookies.get('userId') == 0){
             axios.get('http://localhost:8000/partenaire/'+this.state.partenaireId+'/events')
                 .then(response => {
+                    console.log(response.data);
                     this.setState({ evenements : response.data.evenements });
                     this.setState({ sortedEventsIndexes : response.data.sortedEventsIndex });
                     this.setState({ distances : response.data.distanceEvenement });
@@ -65,6 +66,8 @@ class EventListPartenaire extends Component {
                 for(var i =0 ; i < this.state.evenements.length; i++) {
                     if(this.state.evenements[this.state.sortedEventsIndexes[i]] !== undefined && this.state.distances[this.state.sortedEventsIndexes[i]]){
                     let evenement = this.state.evenements[this.state.sortedEventsIndexes[i]];
+                    if(evenement.etatEvenement.titre !== 'Recherche prestataires')
+                        continue;
                     children.push(<tr>
                         <td> {evenement.id}</td>
                         <td> {evenement.titre}</td>
@@ -98,7 +101,7 @@ class EventListPartenaire extends Component {
                         <th>Titre</th>
                         <th>Date</th>
                         <th>Type</th>
-                        <th>Distance</th>
+                        <th>Distance (km) </th>
                         <th>Actions</th>
                     </tr>
                     </thead>

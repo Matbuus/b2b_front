@@ -60,7 +60,7 @@ class ClientShow extends Component {
                         <h2> Nom : {this.state.client.nom} </h2>
                         <h2> Prenom : {this.state.client.prenom} </h2>
                         <h2> Addresse: {this.state.client.address} </h2>
-                        <h2> Vos evenements  </h2>
+                        <h2> {(this.state.client.note > 0)? 'Votre Note:  ' + this.state.client.note + '/5': ''}  </h2>
 
                         <div id="map" style={mapStyle} data-lat={ this.state.client.lat } data-lng={ this.state.client.lng }> </div>
                     </div>

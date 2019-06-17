@@ -35,11 +35,35 @@ class PrestationsPartenaire extends Component {
             prestations : [],
         }
         console.log(this.state.partenaireId);
+        this.stylePrestation = this.stylePrestation.bind(this);
+        this.changer = this.changer.bind(this);
         //this.clients.forEach((client) => (console.log(client)));
 
     }
 
+    changer = (prestation, action) => {
+        axios.get('http://localhost:8000/client/'
+            + prestation.evenement.client.id +
+            /event/
+            + prestation.evenement.id
+            +'/liste/'+ prestation.id + '/' + action)
+            .then(response => {
+                console.log(response);
+            }).catch(error => {
+            console.log(error);
+        });
+        window.location.reload();
+    };
 
+    stylePrestation = (prestation) => {
+
+        switch(prestation.etatPrestation.titre){
+            case 'Acceptee': return {color: 'blue'};
+            case 'Refusee' : return {color: 'red'};
+            case 'Termine': return {color: 'green'};
+            default: return null;
+        }
+    };
     delete = (prestation) => {
         // var clients = this.state.clients;
         // var index = clients.indexOf(client);
@@ -67,22 +91,36 @@ class PrestationsPartenaire extends Component {
         const table = [];
         const children = [];
         this.state.prestations.forEach(
-            (prestation) => (children.push(
-                    <tr>
-                        <td> {prestation.evenement.titre } </td>
-                        <td> { prestation.dateDebut.date.toString().slice(0,16) }</td>
-                        <td> {prestation.dateFin.date.toString().slice(0,16)} </td>
-                        <td> { prestation.typePrestation.nomType }</td>
-                        <td> {prestation.etatPrestation.titre }</td>
+            (prestation) => {
+                children.push(
+                    <tr style={this.stylePrestation(prestation)} >
+
+                        <td> {prestation.evenement.titre} </td>
+                        <td> {prestation.dateDebut.date.toString().slice(0, 16)}</td>
+                        <td> {prestation.dateFin.date.toString().slice(0, 16)} </td>
+                        <td> {prestation.typePrestation.nomType}</td>
+                        <td> {prestation.etatPrestation.titre}</td>
                         <td>
-                            <button type="button" class="btn btn-danger" onClick={() => { if (window.confirm('Are you sure you wish to delete this item?')) this.delete(prestation) } } >
-                            Supprimer
-                        </button>
-                            { prestation.etatPrestation.titre=='Proposee'? <button>Test</button>:<p></p>}
+                            {prestation.etatPrestation.titre == 'Termine'? <p></p>: <div> <button type="button" class="btn btn-danger" onClick={() => {
+                                    if (window.confirm('Confirmer la suppression?')) this.delete(prestation)
+                                }}>
+                                    Supprimer
+                                </button>
+
+                                {prestation.etatPrestation.titre == 'Acceptee' ?
+                                    <button type="button" class="btn btn-info" onClick={() => {
+                                        if (window.confirm('Confirmer?')) this.changer(prestation, 'termine')
+                                    }}>
+                                        Marquer comme terminé
+                                    </button> : <p></p>
+                                }
+                            </div>
+                            }
+
                         </td>
                     </tr>
-                )
-            ));
+                );
+            });
 
         table.push(
             <table className="table">
@@ -110,7 +148,7 @@ class PrestationsPartenaire extends Component {
                 <div class="card">
                     <div class="card-header"> <h1> Vos Prestations </h1></div>
                     <div class="card-body">
-                        <h2> Les types de prestations réalisables pour ce métier</h2>
+                        <h2> Les prestations que vous avez proposé</h2>
                         {table}
                     </div>
                     <div class="card-footer">
